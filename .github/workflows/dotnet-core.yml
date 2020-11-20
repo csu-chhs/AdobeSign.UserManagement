@@ -1,10 +1,6 @@
 name: .NET Core
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
   build:
@@ -12,14 +8,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+        dotnet-version: 5.0.100
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.0.5
+        
+    - name: Setup NuGet Sources
+      run: nuget sources add -Name "GitHub" -source https://nuget.pkg.github.com/csu-chhs/index.json -StorePasswordInClearText -username dstegelman -password "${{ secrets.DEREK_TOKEN }}"
+
+    - name: Restore
+      run: nuget restore
+    
+    - name: Build with dotnet
+      run: dotnet build --no-restore
+    
+    - name: Run Test Suite
+      run: dotnet test --no-build
+
+
