@@ -4,7 +4,9 @@ using System.Text;
 
 namespace AdobeSign.UserManagement.Core.ResourceModels
 {
-    class UserDetailResourceModel
+    public class BaseUrlResourceModel
     {
+        public string apiAccessPoint { get; set; }
+        public string webAccessPoint { get; set; }
     }
 }
