@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.Exceptions;
 using AdobeSign.UserManagement.Core.Interfaces;
@@ -77,6 +78,44 @@ namespace AdobeSign.UserManagement.Core.Clients
         }
 
         /// <summary>
+        /// Fetches and returns a list in memory of
+        /// all account users.
+        ///
+        /// In our testing attempting to fetch large numbers of records at a time
+        /// had a very limited impact on response times from the Adobe API.  For example
+        /// requesting 100 users took ~ 27 seconds, and requesting 2000 users took ~ 31 seconds.
+        ///
+        /// Therefore, it is likely more efficient *for us* to do smaller numbers of large
+        /// page sizes rather than more frequent small dumps.  In the future, Adobe
+        /// may limit that pageSize which would require us to revisit this.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<UserDetailResourceModel>> _WalkPrimaryUserList()
+        {
+            List<UserDetailResourceModel> userList = new List<UserDetailResourceModel>();
+            bool paging = true;
+            string cursor = "";
+            int pageSize = 20000;
+            while (paging)
+            {
+                var fetchUsers = await GetAllAdobeUsersAsync(cursor, pageSize);
+                userList = userList.Union(fetchUsers.userInfoList).ToList();
+
+                if (!string.IsNullOrEmpty(fetchUsers.page.nextCursor))
+                {
+                    cursor = fetchUsers.page.nextCursor;
+                }
+                else
+                {
+                    // When next cursor value is empty, we are on the last page.
+                    paging = false;
+                }
+            }
+
+            return userList;
+        }
+
+        /// <summary>
         /// There is no automatic way to search for a user through the
         /// Adobe API so we need to do it manually by retrieving pages of
         /// results and then searching through that list to find the user.
@@ -88,26 +127,16 @@ namespace AdobeSign.UserManagement.Core.Clients
         /// <returns></returns>
         public async Task<UserDetailResourceModel> GetAdobeUserViaEmailAsync(string email)
         {
-            bool found = false;
-            string cursor = "";
-            int timeout = 50; // 40 Tries.
-            int counter = 0;
-            while (!found && counter < timeout)
+            var users = await _WalkPrimaryUserList();
+
+            var user = users.FirstOrDefault(s => s.email == email);
+
+            if (user == null)
             {
-                // Start with 100 at a time
-                var userList = await GetAllAdobeUsersAsync(cursor, 1000);
-                UserDetailResourceModel user = userList.userInfoList.FirstOrDefault(s => s.email == email);
-
-                if (user != null)
-                {
-                    return user;
-                }
-
-                cursor = userList.page.nextCursor;
-                counter++;
+                throw new AdobeSignFailedToFetchException($"Failed to find user with email {email}.");
             }
 
-            throw new AdobeSignFailedToFetchException($"Could not find user with email -> {email}.  Attempted {counter} times.");
+            return user;
         }
 
         public async Task UpdateUserGroupsAsync(string id, UsersGroupsResourceModel userGroups)
