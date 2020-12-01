@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AdobeSign.UserManagement.Core.Interfaces;
+﻿using AdobeSign.UserManagement.Core.Interfaces;
 
 namespace AdobeSign.UserManagement.Core
 {

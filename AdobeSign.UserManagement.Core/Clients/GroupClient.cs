@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.Exceptions;
 using AdobeSign.UserManagement.Core.Interfaces;
@@ -53,10 +50,10 @@ namespace AdobeSign.UserManagement.Core.Clients
             throw new AdobeSignFailedToFetchException("Failed to fetch Adobe Sign Groups.");
         }
 
-        public async Task<GroupDetailResourceModel> GetGroupAsync(string id)
+        public async Task<GroupSingleResourceModel> GetGroupAsync(string id)
         {
             var request = new RestRequest($"groups/{id}");
-            var response = await _client.ExecuteAsync<GroupDetailResourceModel>(request);
+            var response = await _client.ExecuteAsync<GroupSingleResourceModel>(request);
             if (response.IsSuccessful)
             {
                 return response.Data;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AdobeSign.UserManagement.Core.ResourceModels
+﻿namespace AdobeSign.UserManagement.Core.ResourceModels
 {
     public class BaseUrlResourceModel
     {

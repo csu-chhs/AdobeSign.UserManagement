@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.ResourceModels.Groups;
 using AdobeSign.UserManagement.Core.ResourceModels.Users;
 
@@ -30,7 +27,7 @@ namespace AdobeSign.UserManagement.Core.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<GroupDetailResourceModel> GetGroupAsync(string id);
+        Task<GroupSingleResourceModel> GetGroupAsync(string id);
 
         /// <summary>
         /// Attempts to search for a group based upon its name.  Adobe does not
