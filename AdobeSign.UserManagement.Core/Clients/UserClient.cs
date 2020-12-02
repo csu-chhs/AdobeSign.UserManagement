@@ -51,6 +51,11 @@ namespace AdobeSign.UserManagement.Core.Clients
             throw new AdobeSignFailedToFetchException("Failed to fetch all Adobe users", response.ErrorException);
         }
 
+        public async Task<List<UserDetailResourceModel>> GetAllAdobeUsersFullListAsync()
+        {
+            return await _WalkPrimaryUserList();
+        }
+
         public async Task<UserDetailResourceModel> GetAdobeUserAsync(string id)
         {
             var request = new RestRequest($"users/{id}");

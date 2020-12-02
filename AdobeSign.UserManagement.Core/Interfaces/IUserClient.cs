@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.ResourceModels.Users;
 
 namespace AdobeSign.UserManagement.Core.Interfaces
@@ -21,6 +22,14 @@ namespace AdobeSign.UserManagement.Core.Interfaces
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Task<UserListResourceModel> GetAllAdobeUsersAsync(string cursor, int? pageSize);
+
+        /// <summary>
+        /// Returns the full set of users within the organization.  Pages
+        /// through all results until the end.  This method
+        /// typically does require a longer load time.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<UserDetailResourceModel>> GetAllAdobeUsersFullListAsync();
 
         /// <summary>
         /// Fetch a single user via the ID assigned by Adobe.
