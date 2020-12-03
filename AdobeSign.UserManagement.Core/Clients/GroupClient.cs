@@ -86,6 +86,7 @@ namespace AdobeSign.UserManagement.Core.Clients
         public async Task<UserListResourceModel> GetUsersInGroupAsync(string id)
         {
             var request = new RestRequest($"groups/{id}/users");
+            request.AddParameter("pageSize", 50000);
             var response = await _client.ExecuteAsync<UserListResourceModel>(request);
             if (response.IsSuccessful)
             {

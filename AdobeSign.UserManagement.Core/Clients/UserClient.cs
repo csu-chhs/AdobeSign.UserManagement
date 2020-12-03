@@ -100,10 +100,12 @@ namespace AdobeSign.UserManagement.Core.Clients
             List<UserDetailResourceModel> userList = new List<UserDetailResourceModel>();
             bool paging = true;
             string cursor = "";
-            int pageSize = 20000;
+            int pageSize = 130000;
+            int count = 0;
             while (paging)
             {
                 var fetchUsers = await GetAllAdobeUsersAsync(cursor, pageSize);
+                count = count + fetchUsers.userInfoList.Count;
                 userList = userList.Union(fetchUsers.userInfoList).ToList();
 
                 if (!string.IsNullOrEmpty(fetchUsers.page.nextCursor))
@@ -134,7 +136,7 @@ namespace AdobeSign.UserManagement.Core.Clients
         {
             var users = await _WalkPrimaryUserList();
 
-            var user = users.FirstOrDefault(s => s.email == email);
+            var user = users.FirstOrDefault(s => s.email.ToLower() == email.ToLower());
 
             if (user == null)
             {
