@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.Exceptions;
 using AdobeSign.UserManagement.Core.Interfaces;
@@ -83,16 +85,49 @@ namespace AdobeSign.UserManagement.Core.Clients
             throw new AdobeSignFailedToFetchException($"Could not find group with name {groupName}.  Attempted {counter} times.");
         }
 
-        public async Task<UserListResourceModel> GetUsersInGroupAsync(string id)
+        public async Task<List<UserDetailResourceModel>> GetUsersInGroupAsync(string id)
+        {
+            List<UserDetailResourceModel> userList = new List<UserDetailResourceModel>();
+            bool paging = true;
+            string cursor = "";
+            int pageSize = 10000;
+            while (paging)
+            {
+                var fetchUsers = await _GetUsersInGroupAsync(id, cursor, pageSize);
+                userList = userList.Union(fetchUsers.userInfoList).ToList();
+                if (!string.IsNullOrEmpty(fetchUsers.page.nextCursor))
+                {
+                    cursor = fetchUsers.page.nextCursor;
+                }
+                else
+                {
+                    paging = false;
+                }
+            }
+
+            return userList;
+        }
+
+        private async Task<UserListResourceModel> _GetUsersInGroupAsync(string id, string cursor, int pageSize)
         {
             var request = new RestRequest($"groups/{id}/users");
-            request.AddParameter("pageSize", 50000);
+
+            if (!string.IsNullOrEmpty(cursor))
+            {
+                request.AddParameter("cursor", cursor);
+            }
+
+            if (pageSize != null)
+            {
+                request.AddParameter("pageSize", pageSize);
+            }
+            
             var response = await _client.ExecuteAsync<UserListResourceModel>(request);
             if (response.IsSuccessful)
             {
                 return response.Data;
             }
-            throw new AdobeSignFailedToFetchException($"Could not get users for group {id}");
+            throw new AdobeSignFailedToFetchException($"Could not fetch membership of group {id}", response.ErrorException);
         }
     }
 }
