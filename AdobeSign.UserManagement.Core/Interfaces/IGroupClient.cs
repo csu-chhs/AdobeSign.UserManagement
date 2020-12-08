@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AdobeSign.UserManagement.Core.ResourceModels.Groups;
 using AdobeSign.UserManagement.Core.ResourceModels.Users;
 
@@ -44,6 +45,6 @@ namespace AdobeSign.UserManagement.Core.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<UserListResourceModel> GetUsersInGroupAsync(string id);
+        Task<List<UserDetailResourceModel>> GetUsersInGroupAsync(string id);
     }
 }

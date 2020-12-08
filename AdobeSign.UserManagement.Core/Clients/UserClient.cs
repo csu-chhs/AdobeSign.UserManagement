@@ -101,11 +101,9 @@ namespace AdobeSign.UserManagement.Core.Clients
             bool paging = true;
             string cursor = "";
             int pageSize = 130000;
-            int count = 0;
             while (paging)
             {
                 var fetchUsers = await GetAllAdobeUsersAsync(cursor, pageSize);
-                count = count + fetchUsers.userInfoList.Count;
                 userList = userList.Union(fetchUsers.userInfoList).ToList();
 
                 if (!string.IsNullOrEmpty(fetchUsers.page.nextCursor))
@@ -153,7 +151,7 @@ namespace AdobeSign.UserManagement.Core.Clients
             var response = await _client.ExecuteAsync(request);
             if (!response.IsSuccessful)
             {
-                throw new AdobeSignFailedToSaveException($"Failed to save groups for user {id}");
+                throw new AdobeSignFailedToSaveException($"Failed to save groups for user {id}", response.ErrorException);
             }
         }
     }
