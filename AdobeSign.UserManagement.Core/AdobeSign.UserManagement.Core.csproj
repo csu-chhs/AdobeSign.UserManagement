@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>CHHS Application Development Team</Authors>
-    <Version>1.0.3</Version>
+    <Version>1.1.0</Version>
     <PackageProjectUrl>https://github.com/csu-chhs/AdobeSign.UserManagement</PackageProjectUrl>
     <Company>College of Health and Human Sciences</Company>
     <PackageId>AdobeSign.UserManagement.Core</PackageId>
