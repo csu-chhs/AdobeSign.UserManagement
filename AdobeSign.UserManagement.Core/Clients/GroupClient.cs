@@ -36,7 +36,7 @@ namespace AdobeSign.UserManagement.Core.Clients
 
             if (pageSize != null)
             {
-                request.AddParameter("pageSize", pageSize);
+                request.AddParameter("pageSize", (int)pageSize);
             }
 
             if (!string.IsNullOrEmpty(cursor))

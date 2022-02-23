@@ -35,7 +35,7 @@ namespace AdobeSign.UserManagement.Core.Clients
 
             if (pageSize != null)
             {
-                request.AddParameter("pageSize", pageSize);
+                request.AddParameter("pageSize", (int)pageSize);
             }
 
             if (!string.IsNullOrEmpty(cursor))
@@ -146,9 +146,9 @@ namespace AdobeSign.UserManagement.Core.Clients
 
         public async Task UpdateUserGroupsAsync(string id, UsersGroupsResourceModel userGroups)
         {
-            var request = new RestRequest($"users/{id}/groups", Method.PUT);
+            var request = new RestRequest($"users/{id}/groups");
             request.AddJsonBody(userGroups);
-            var response = await _client.ExecuteAsync(request);
+            var response = await _client.ExecuteAsync(request, Method.Put);
             if (!response.IsSuccessful)
             {
                 throw new AdobeSignFailedToSaveException($"Failed to save groups for user {id}", response.ErrorException);
