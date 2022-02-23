@@ -25,7 +25,7 @@ namespace AdobeSign.UserManagement.Core
             RestClient client = new RestClient("https://api.echosign.com/api/rest/v6/");
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", _adobeIntegrationKey));
             var request = new RestRequest($"baseUris");
-            var response = client.Execute<BaseUrlResourceModel>(request);
+            var response = client.ExecuteAsync<BaseUrlResourceModel>(request).Result;
             if (response.IsSuccessful)
             {
                 return response.Data.apiAccessPoint;
