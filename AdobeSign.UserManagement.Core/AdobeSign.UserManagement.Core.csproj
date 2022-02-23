@@ -5,7 +5,7 @@
 	  <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>CHHS Application Development Team</Authors>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <PackageProjectUrl>https://github.com/csu-chhs/AdobeSign.UserManagement</PackageProjectUrl>
     <Company>College of Health and Human Sciences</Company>
     <PackageId>AdobeSign.UserManagement.Core</PackageId>
